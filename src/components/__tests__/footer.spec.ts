@@ -65,4 +65,13 @@ describe('Footer', () => {
 
         expect(copyText).toContain('© 2023 Todos os direitos reservados');
     });
+
+    it('renders a link with target="_blank"', () => {
+        const wrapper = mount(AppFooter);
+
+        const link = wrapper.find('a');
+        link.element.setAttribute('target', '_blank');
+
+        expect(link.attributes('target')).toBe('_blank');
+    });
 });
