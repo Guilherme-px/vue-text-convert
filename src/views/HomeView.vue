@@ -1,7 +1,9 @@
 <template>
     <div>
-        <h1>Home</h1>
+        <Card class="my-10"> </Card>
     </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Card from '../components/cards/Card.vue';
+</script>
