@@ -32,7 +32,7 @@ describe('Navbar', () => {
     it('displays the title "Convert Case"', () => {
         const titulo = wrapper.find('h1');
         expect(titulo.text()).toBe('Convert Case');
-        expect(titulo.classes()).toContain('text-white');
+        expect(titulo.classes()).toContain('text-font-color');
         expect(titulo.classes()).toContain('font-semibold');
         expect(titulo.classes()).toContain('text-lg');
     });
