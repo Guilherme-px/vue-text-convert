@@ -64,6 +64,9 @@
                     <button data-testid="btn-textToBinary" class="btn" @click="binaryCreator">
                         Converter para binário
                     </button>
+                    <button data-testid="btn-binaryTranslate" class="btn" @click="binaryTranslate">
+                        Traduzir binário
+                    </button>
                 </div>
             </div>
         </div>
@@ -124,6 +127,10 @@ const binaryCreator = () => {
     convertedText.value = convertToBinary(inputText.value);
 };
 
+const binaryTranslate = () => {
+    convertedText.value = convertFromBinary(inputText.value);
+};
+
 function capitalizeFirstLetters(str: string): string {
     return str.toLowerCase().replace(/(?:^|\s)\S/g, (s) => s.toUpperCase());
 }
@@ -147,6 +154,17 @@ function convertToBinary(str: string): string {
         binary += binaryCode.padStart(8, '0');
     }
     return binary;
+}
+
+function convertFromBinary(str: string): string {
+    let text = '';
+    for (let i = 0; i < str.length; i += 8) {
+        const byte = str.slice(i, i + 8);
+        const charCode = parseInt(byte, 2);
+        const character = String.fromCharCode(charCode);
+        text += character;
+    }
+    return text;
 }
 </script>
 
