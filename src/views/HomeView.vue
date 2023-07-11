@@ -2,32 +2,42 @@
     <div>
         <div class="bg-gray-900 rounded-lg overflow-hidden mx-10 my-10">
             <div class="p-6">
-                <div class="flex mb-6">
+                <div class="flex items-center mb-6">
                     <textarea
+                        data-testid="text-input"
                         id="textInput"
                         class="w-full outline-none bg-gray-800 text-font-color placeholder-font-color h-48 resize-none border border-black rounded-lg px-4 py-2"
                         placeholder="Digite o texto para converter..."
                         v-model="inputText"
                         @input="reflectInput"
                     ></textarea>
+                    <font-awesome-icon
+                        icon="fa-solid fa-arrow-right-arrow-left"
+                        class="mx-5 text-dark-green scale-x-150 -scale-y-125"
+                    />
                     <textarea
+                        data-testid="text-output"
                         id="textOutput"
-                        class="w-full outline-none bg-gray-800 text-font-color placeholder-font-color h-48 resize-none border border-black rounded-lg px-4 py-2 ml-4"
+                        class="w-full outline-none bg-gray-800 text-font-color placeholder-font-color h-48 resize-none border border-black rounded-lg px-4 py-2"
                         placeholder="Texto convertido..."
                         :value="outputText"
                         readonly
                     ></textarea>
                 </div>
 
-                <div class="flex text-font-color mb-4">
+                <div class="flex text-font-color mb-8">
                     <div class="mr-10">
-                        <span class="mr-2 font-semibold">Total de letras:</span>
-                        <span id="letters">{{ letterCount }}</span>
+                        <span data-testid="text-letter" class="mr-2 font-semibold"
+                            >Total de letras:</span
+                        >
+                        <span data-testid="letter-count">{{ letterCount }}</span>
                     </div>
 
                     <div>
-                        <span class="mr-2 font-semibold">Total de palavras:</span>
-                        <span id="words">{{ wordCount }}</span>
+                        <span data-testid="text-words" class="mr-2 font-semibold"
+                            >Total de palavras:</span
+                        >
+                        <span data-testid="words-count">{{ wordCount }}</span>
                     </div>
                 </div>
 
@@ -125,10 +135,10 @@ function reverseString(str: string): string {
 
 <style lang="postcss">
 .btn {
-    @apply min-w-[20px] h-12 px-4 py-2 mr-4 mb-4 rounded-lg bg-gray-800 text-font-color text-center;
+    @apply min-w-[20px] px-4 py-2 mr-4 mb-4 rounded-lg bg-gray-800 text-font-color text-center;
 }
 
 .btn:hover {
-    @apply cursor-pointer shadow-md bg-gray-700;
+    @apply cursor-pointer shadow-md bg-gray-700 text-light-green;
 }
 </style>

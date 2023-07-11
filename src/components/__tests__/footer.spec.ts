@@ -10,11 +10,9 @@ describe('Footer', () => {
 
     it('has correct social media links', () => {
         const wrapper = mount(AppFooter);
-        const instagramLink = wrapper.find('a[href="https://www.instagram.com/guilherme_jsx/"]');
-        const linkedinLink = wrapper.find(
-            'a[href="https://www.linkedin.com/in/guilherme-augusto-da-silva/"]'
-        );
-        const githubLink = wrapper.find('a[href="https://github.com/Guilherme-px"]');
+        const instagramLink = wrapper.find('[data-testid="link-insta"]');
+        const linkedinLink = wrapper.find('[data-testid="link-linkedin"]');
+        const githubLink = wrapper.find('[data-testid="link-github"]');
 
         expect(instagramLink.exists()).toBe(true);
         expect(linkedinLink.exists()).toBe(true);
@@ -54,14 +52,14 @@ describe('Footer', () => {
 
     it('renders correct developer name', () => {
         const wrapper = mount(AppFooter);
-        const developerName = wrapper.find('p').text();
+        const developerName = wrapper.find('[data-testid="text-dev"]').text();
 
         expect(developerName).toBe('Desenvolvido por Guilherme Augusto');
     });
 
     it('renders copy text', () => {
         const wrapper = mount(AppFooter);
-        const copyText = wrapper.find('.text-font-color').text();
+        const copyText = wrapper.find('[data-testid="text-copy"]').text();
 
         expect(copyText).toContain('© 2023 Todos os direitos reservados');
     });

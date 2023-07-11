@@ -30,17 +30,34 @@ describe('Navbar', () => {
     });
 
     it('displays the title "Convert Case"', () => {
-        const titulo = wrapper.find('h1');
-        expect(titulo.text()).toBe('Convert Case');
-        expect(titulo.classes()).toContain('text-font-color');
-        expect(titulo.classes()).toContain('font-semibold');
-        expect(titulo.classes()).toContain('text-lg');
+        const title = wrapper.find('h1');
+        expect(title.text()).toBe('Convert Case');
+        expect(title.classes()).toContain('text-font-color');
+        expect(title.classes()).toContain('font-semibold');
+        expect(title.classes()).toContain('text-lg');
+    });
+
+    it('displays the link "Início"', () => {
+        const linkHome = wrapper.find('[data-testid="link-home"]');
+        expect(linkHome.text()).toBe('Início');
+        expect(linkHome.classes()).toContain('text-font-color');
+        expect(linkHome.classes()).toContain('hover:text-light-green');
+        expect(linkHome.classes()).toContain('text-lg');
+    });
+
+    it('displays the link "Sobre"', () => {
+        const linkAbout = wrapper.find('[data-testid="link-about"]');
+        expect(linkAbout.text()).toBe('Sobre');
+        expect(linkAbout.classes()).toContain('text-font-color');
+        expect(linkAbout.classes()).toContain('hover:text-light-green');
+        expect(linkAbout.classes()).toContain('text-lg');
+        expect(linkAbout.classes()).toContain('pr-5');
     });
 
     it('navigates to the Home page when the link is clicked', async () => {
         const router = wrapper.vm.$router;
         await router.isReady();
-        const linkHome = wrapper.get('a[href="/"]');
+        const linkHome = wrapper.find('[data-testid="link-home"]');
         await linkHome.trigger('click');
 
         expect(wrapper.vm.$route.path).toBe('/');
@@ -49,11 +66,11 @@ describe('Navbar', () => {
 
     it('navigates to the About page when the link is clicked', async () => {
         const router = wrapper.vm.$router;
-        const linkSobre = wrapper.get('a[href="/sobre"]');
-        await linkSobre.trigger('click');
+        const linkAbout = wrapper.find('[data-testid="link-about"]');
+        await linkAbout.trigger('click');
         await router.isReady();
 
         expect(wrapper.vm.$route.path).toBe('/sobre');
-        expect(linkSobre.classes()).toContain('router-link-active');
+        expect(linkAbout.classes()).toContain('router-link-active');
     });
 });
