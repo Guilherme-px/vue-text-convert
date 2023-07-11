@@ -61,6 +61,9 @@
                     <button data-testid="btn-reverseText" class="btn" @click="reverseText">
                         Inverter texto
                     </button>
+                    <button data-testid="btn-textToBinary" class="btn" @click="binaryCreator">
+                        Converter para binário
+                    </button>
                 </div>
             </div>
         </div>
@@ -117,6 +120,10 @@ const reverseText = () => {
     inputText.value = reverseString(inputText.value);
 };
 
+const binaryCreator = () => {
+    inputText.value = convertToBinary(inputText.value);
+};
+
 function capitalizeFirstLetters(str: string): string {
     return str.toLowerCase().replace(/(?:^|\s)\S/g, (s) => s.toUpperCase());
 }
@@ -130,6 +137,16 @@ function createHashtags(str: string, char: string = '#'): string {
 
 function reverseString(str: string): string {
     return str.split('').reverse().join('');
+}
+
+function convertToBinary(str: string): string {
+    let binary = '';
+    for (let i = 0; i < str.length; i++) {
+        const charCode = str.charCodeAt(i);
+        const binaryCode = charCode.toString(2);
+        binary += binaryCode.padStart(8, '0');
+    }
+    return binary;
 }
 </script>
 

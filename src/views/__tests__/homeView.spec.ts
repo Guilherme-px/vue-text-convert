@@ -134,6 +134,13 @@ describe('Home', () => {
         expect(button.text()).toBe('Inverter texto');
     });
 
+    it('should render the button "Converter para binário"', () => {
+        const wrapper = shallowMount(Home);
+        const button = wrapper.find('[data-testid="btn-textToBinary"]');
+        expect(button.exists()).toBe(true);
+        expect(button.text()).toBe('Converter para binário');
+    });
+
     it('should capitalize the first letters when "Primeiras Maiúsculas" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-capitalizerFirst"]');
@@ -179,5 +186,16 @@ describe('Home', () => {
         await textInput.setValue('Inverter texto');
         await button.trigger('click');
         expect(wrapper.vm.inputText).toBe('otxet retrevnI');
+    });
+
+    it('should reverse the text when "Converter para binário" button is clicked', async () => {
+        const wrapper = shallowMount(Home);
+        const button = wrapper.find('[data-testid="btn-textToBinary"]');
+        const textInput = wrapper.find('#textInput');
+        await textInput.setValue('Binário');
+        await button.trigger('click');
+        expect(wrapper.vm.inputText).toBe(
+            '01000010011010010110111011100001011100100110100101101111'
+        );
     });
 });
