@@ -20,7 +20,7 @@
                         id="textOutput"
                         class="w-full outline-none bg-gray-800 text-font-color placeholder-font-color h-48 resize-none border border-black rounded-lg px-4 py-2"
                         placeholder="Texto convertido..."
-                        :value="outputText"
+                        :value="convertedText"
                         readonly
                     ></textarea>
                 </div>
@@ -75,10 +75,10 @@ import { ref, computed } from 'vue';
 
 const inputText = ref('');
 const reflectedText = ref('');
+const convertedText = ref('');
 
 const letterCount = computed(() => countLetters(inputText.value));
 const wordCount = computed(() => countWords(inputText.value));
-const outputText = computed(() => reflect(inputText.value));
 
 function reflectInput() {
     reflectedText.value = reflect(inputText.value);
@@ -101,27 +101,27 @@ function countWords(str: string): number {
 }
 
 const capitalizerFirst = () => {
-    inputText.value = capitalizeFirstLetters(inputText.value);
+    convertedText.value = capitalizeFirstLetters(inputText.value);
 };
 
 const allCapitalizer = () => {
-    inputText.value = inputText.value.toUpperCase();
+    convertedText.value = inputText.value.toUpperCase();
 };
 
 const lowerCase = () => {
-    inputText.value = inputText.value.toLowerCase();
+    convertedText.value = inputText.value.toLowerCase();
 };
 
 const hashtagsCreator = () => {
-    inputText.value = createHashtags(inputText.value);
+    convertedText.value = createHashtags(inputText.value);
 };
 
 const reverseText = () => {
-    inputText.value = reverseString(inputText.value);
+    convertedText.value = reverseString(inputText.value);
 };
 
 const binaryCreator = () => {
-    inputText.value = convertToBinary(inputText.value);
+    convertedText.value = convertToBinary(inputText.value);
 };
 
 function capitalizeFirstLetters(str: string): string {

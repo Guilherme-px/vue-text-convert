@@ -28,7 +28,7 @@ describe('Home', () => {
         const wrapper = shallowMount(Home);
         const textInput = wrapper.find('[data-testid="text-input"]');
         await textInput.setValue('Hello');
-        expect(wrapper.vm.outputText).toBe('Hello');
+        expect(wrapper.vm.inputText).toBe('Hello');
     });
 
     it('should contain elements for letter count and word count', () => {
@@ -148,7 +148,7 @@ describe('Home', () => {
         const textInput = wrapper.find('#textInput');
         await textInput.setValue('primeiras maiúsculas');
         await button.trigger('click');
-        expect(wrapper.vm.inputText).toBe('Primeiras Maiúsculas');
+        expect(wrapper.vm.convertedText).toBe('Primeiras Maiúsculas');
     });
 
     it('should convert the text to uppercase when "Todas maiúsculas" button is clicked', async () => {
@@ -157,7 +157,7 @@ describe('Home', () => {
         const textInput = wrapper.find('#textInput');
         await textInput.setValue('todas maiúsculas');
         await button.trigger('click');
-        expect(wrapper.vm.inputText).toBe('TODAS MAIÚSCULAS');
+        expect(wrapper.vm.convertedText).toBe('TODAS MAIÚSCULAS');
     });
 
     it('should convert the text to lowercase when "Todas minúsculas" button is clicked', async () => {
@@ -167,7 +167,7 @@ describe('Home', () => {
         await textInput.setValue('TODAS MINÚSCULAS');
         await button.trigger('click');
 
-        expect(wrapper.vm.inputText).toBe('todas minúsculas');
+        expect(wrapper.vm.convertedText).toBe('todas minúsculas');
     });
 
     it('should create hashtags when "Criador de hashtag" button is clicked', async () => {
@@ -176,7 +176,7 @@ describe('Home', () => {
         const textInput = wrapper.find('#textInput');
         await textInput.setValue('Criador de hashtag');
         await button.trigger('click');
-        expect(wrapper.vm.inputText).toBe('#Criador #de #hashtag');
+        expect(wrapper.vm.convertedText).toBe('#Criador #de #hashtag');
     });
 
     it('should reverse the text when "Inverter texto" button is clicked', async () => {
@@ -185,7 +185,7 @@ describe('Home', () => {
         const textInput = wrapper.find('#textInput');
         await textInput.setValue('Inverter texto');
         await button.trigger('click');
-        expect(wrapper.vm.inputText).toBe('otxet retrevnI');
+        expect(wrapper.vm.convertedText).toBe('otxet retrevnI');
     });
 
     it('should reverse the text when "Converter para binário" button is clicked', async () => {
@@ -194,7 +194,7 @@ describe('Home', () => {
         const textInput = wrapper.find('#textInput');
         await textInput.setValue('Binário');
         await button.trigger('click');
-        expect(wrapper.vm.inputText).toBe(
+        expect(wrapper.vm.convertedText).toBe(
             '01000010011010010110111011100001011100100110100101101111'
         );
     });
