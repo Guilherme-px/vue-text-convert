@@ -54,7 +54,7 @@ describe('Footer', () => {
         const wrapper = mount(AppFooter);
         const developerName = wrapper.find('[data-testid="text-dev"]').text();
 
-        expect(developerName).toBe('Desenvolvido por Guilherme Augusto');
+        expect(developerName).toBe('Desenvolvido por: Guilherme Augusto');
     });
 
     it('renders copy text', () => {
