@@ -44,14 +44,14 @@
 
                     <div>
                         <button
-                            data-testid="btn-clear"
+                            data-testid="btn-copy"
                             class="btn-actions mr-6 bg-light-green hover:bg-gray-800"
                             @click="copiarTexto"
                         >
                             Copiar
                         </button>
                         <button
-                            data-testid="btn-copy"
+                            data-testid="btn-clear"
                             class="btn-actions border-light-green hover:bg-gray-700"
                             @click="clearInputs"
                         >
