@@ -25,19 +25,38 @@
                     ></textarea>
                 </div>
 
-                <div class="flex text-font-color mb-8">
-                    <div class="mr-10">
-                        <span data-testid="text-letter" class="mr-2 font-semibold"
-                            >Total de letras:</span
-                        >
-                        <span data-testid="letter-count">{{ letterCount }}</span>
+                <div class="flex text-font-color mb-10 justify-between items-center">
+                    <div class="flex flex-col">
+                        <div class="mb-2">
+                            <span data-testid="text-letter" class="mr-2 font-semibold"
+                                >Total de letras:</span
+                            >
+                            <span data-testid="letter-count">{{ letterCount }}</span>
+                        </div>
+
+                        <div>
+                            <span data-testid="text-words" class="mr-2 font-semibold"
+                                >Total de palavras:</span
+                            >
+                            <span data-testid="words-count">{{ wordCount }}</span>
+                        </div>
                     </div>
 
                     <div>
-                        <span data-testid="text-words" class="mr-2 font-semibold"
-                            >Total de palavras:</span
+                        <button
+                            data-testid="btn-clear"
+                            class="btn-actions mr-6 bg-light-green hover:bg-gray-800"
+                            @click="copiarTexto"
                         >
-                        <span data-testid="words-count">{{ wordCount }}</span>
+                            Copiar
+                        </button>
+                        <button
+                            data-testid="btn-copy"
+                            class="btn-actions border-light-green hover:bg-gray-700"
+                            @click="clearInputs"
+                        >
+                            Limpar
+                        </button>
                     </div>
                 </div>
 
@@ -89,6 +108,22 @@ const convertedText = ref('');
 
 const letterCount = computed(() => countLetters(inputText.value));
 const wordCount = computed(() => countWords(inputText.value));
+
+function clearInputs() {
+    convertedText.value = '';
+    inputText.value = '';
+}
+
+async function copiarTexto() {
+    if (convertedText.value) {
+        try {
+            await navigator.clipboard.writeText(convertedText.value);
+            console.log('Texto copiado com sucesso!');
+        } catch (error) {
+            console.error('Erro ao copiar o texto:', error);
+        }
+    }
+}
 
 function reflectInput() {
     reflectedText.value = reflect(inputText.value);
@@ -204,7 +239,15 @@ function base64Translate(str: string): string {
     @apply min-w-[20px] px-4 py-2 mr-4 mb-4 rounded-lg bg-gray-800 text-font-color text-center border border-light-green;
 }
 
+.btn-actions {
+    @apply px-4 py-2 rounded-lg text-font-color text-center border;
+}
+
 .btn:hover {
     @apply cursor-pointer shadow-md bg-gray-700 text-light-green;
+}
+
+.btn-actions:hover {
+    @apply cursor-pointer shadow-md text-light-green;
 }
 </style>

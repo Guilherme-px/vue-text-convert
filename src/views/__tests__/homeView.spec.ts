@@ -159,7 +159,7 @@ describe('Home', () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-capitalizerFirst"]');
 
-        const textInput = wrapper.find('#textInput');
+        const textInput = wrapper.find('[data-testid="text-input"]');
         await textInput.setValue('primeiras maiúsculas');
         await button.trigger('click');
         expect(wrapper.vm.convertedText).toBe('Primeiras Maiúsculas');
@@ -168,7 +168,7 @@ describe('Home', () => {
     it('should convert the text to uppercase when "Todas maiúsculas" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-allCapitalizer"]');
-        const textInput = wrapper.find('#textInput');
+        const textInput = wrapper.find('[data-testid="text-input"]');
         await textInput.setValue('todas maiúsculas');
         await button.trigger('click');
         expect(wrapper.vm.convertedText).toBe('TODAS MAIÚSCULAS');
@@ -177,7 +177,7 @@ describe('Home', () => {
     it('should convert the text to lowercase when "Todas minúsculas" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-lowerCase"]');
-        const textInput = wrapper.find('#textInput');
+        const textInput = wrapper.find('[data-testid="text-input"]');
         await textInput.setValue('TODAS MINÚSCULAS');
         await button.trigger('click');
 
@@ -187,7 +187,7 @@ describe('Home', () => {
     it('should create hashtags when "Criador de hashtag" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-hashtagsCreator"]');
-        const textInput = wrapper.find('#textInput');
+        const textInput = wrapper.find('[data-testid="text-input"]');
         await textInput.setValue('Criador de hashtag');
         await button.trigger('click');
         expect(wrapper.vm.convertedText).toBe('#Criador #de #hashtag');
@@ -196,7 +196,7 @@ describe('Home', () => {
     it('should reverse the text when "Inverter texto" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-reverseText"]');
-        const textInput = wrapper.find('#textInput');
+        const textInput = wrapper.find('[data-testid="text-input"]');
         await textInput.setValue('Inverter texto');
         await button.trigger('click');
         expect(wrapper.vm.convertedText).toBe('otxet retrevnI');
@@ -205,7 +205,7 @@ describe('Home', () => {
     it('should convert text to binary when "Converter para binário" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-textToBinary"]');
-        const textInput = wrapper.find('#textInput');
+        const textInput = wrapper.find('[data-testid="text-input"]');
         await textInput.setValue('Binário');
         await button.trigger('click');
         expect(wrapper.vm.convertedText).toBe(
@@ -216,7 +216,7 @@ describe('Home', () => {
     it('should translate the binary code when "Traduzir binário" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-binaryTranslate"]');
-        const textInput = wrapper.find('#textInput');
+        const textInput = wrapper.find('[data-testid="text-input"]');
         await textInput.setValue('01000010011010010110111011100001011100100110100101101111');
         await button.trigger('click');
         expect(wrapper.vm.convertedText).toBe('Binário');
@@ -225,7 +225,7 @@ describe('Home', () => {
     it('should return error if binary code is invalid', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-binaryTranslate"]');
-        const textInput = wrapper.find('#textInput');
+        const textInput = wrapper.find('[data-testid="text-input"]');
         await textInput.setValue('002');
         await button.trigger('click');
         expect(wrapper.vm.convertedText).toBe('Erro: Binário inválido!');
@@ -244,12 +244,27 @@ describe('Home', () => {
         expect(wrapper.vm.convertedText).toBe('');
     });
 
-    it('should decode code in when "Decodificar base64" button is clicked', async () => {
+    it('should decode code base64 when "Decodificar base64" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-base64Translate"]');
-        const textInput = wrapper.find('#textInput');
+        const textInput = wrapper.find('[data-testid="text-input"]');
         await textInput.setValue('SGVsbG8gV29ybGQ');
         await button.trigger('click');
         expect(wrapper.vm.convertedText).toBe('Hello World');
+    });
+
+    it('should clear textarea when "Limpar" button is clicked', async () => {
+        const wrapper = shallowMount(Home);
+        const buttonClear = wrapper.find('[data-testid="btn-clear"]');
+        const button = wrapper.find('[data-testid="btn-base64Translate"]');
+
+        const textInput = wrapper.find('[data-testid="text-input"]');
+        await textInput.setValue('SGVsbG8gV29ybGQ');
+
+        await button.trigger('click');
+        await buttonClear.trigger('click');
+
+        expect(wrapper.vm.convertedText).toBe('');
+        expect(wrapper.vm.inputText).toBe('');
     });
 });
