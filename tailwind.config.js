@@ -4,8 +4,9 @@ export default {
     theme: {
         extend: {
             colors: {
-                'navbar-bg': '#181818',
-                'light-green': '#41b883'
+                'light-green': '#41b883',
+                'dark-green': '#00bd7e',
+                'font-color': '#d1d4da'
             }
         }
     },

@@ -17,6 +17,7 @@
         "build": "run-p type-check build-only",
         "preview": "vite preview",
         "test:unit": "vitest",
+        "test:coverage": "vitest run --coverage",
         "test:e2e": "start-server-and-test preview http://localhost:4173 'cypress run --e2e'",
         "test:e2e:dev": "start-server-and-test 'vite dev --port 4173' http://localhost:4173 'cypress open --e2e'",
         "build-only": "vite build",
@@ -26,7 +27,13 @@
         "postinstall": "husky install"
     },
     "dependencies": {
-        "vue": "^3.3.4",
+        "@fortawesome/fontawesome-free": "^6.4.0",
+        "@fortawesome/fontawesome-svg-core": "^6.4.0",
+        "@fortawesome/free-brands-svg-icons": "^6.4.0",
+        "@fortawesome/free-regular-svg-icons": "^6.4.0",
+        "@fortawesome/free-solid-svg-icons": "^6.4.0",
+        "@fortawesome/vue-fontawesome": "^3.0.3",
+        "vue": "^3.2.36",
         "vue-router": "^4.2.2"
     },
     "devDependencies": {
@@ -36,6 +43,7 @@
         "@types/node": "^18.16.17",
         "@vitejs/plugin-vue": "^4.2.3",
         "@vitejs/plugin-vue-jsx": "^3.0.1",
+        "@vitest/coverage-v8": "^0.33.0",
         "@vue/eslint-config-prettier": "^7.1.0",
         "@vue/eslint-config-typescript": "^11.0.3",
         "@vue/test-utils": "^2.3.2",
