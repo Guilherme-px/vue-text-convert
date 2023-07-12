@@ -214,4 +214,17 @@ describe('Home', () => {
         await button.trigger('click');
         expect(wrapper.vm.convertedText).toBe('Binário');
     });
+
+    it('clears the output when the text is deleted', async () => {
+        const wrapper = shallowMount(Home);
+        const button = wrapper.find('[data-testid="btn-capitalizerFirst"]');
+
+        const textInput = wrapper.find('[data-testid="text-input"]');
+        await textInput.setValue('Hello');
+        await button.trigger('click');
+        expect(wrapper.vm.convertedText).toBe('Hello');
+
+        await textInput.setValue('');
+        expect(wrapper.vm.convertedText).toBe('');
+    });
 });

@@ -6,7 +6,7 @@
                     <textarea
                         data-testid="text-input"
                         id="textInput"
-                        class="w-full outline-none bg-gray-800 text-font-color placeholder-font-color h-48 resize-none border border-black rounded-lg px-4 py-2"
+                        class="w-full outline-none bg-gray-800 text-font-color placeholder-font-color h-48 resize-none border border-light-green rounded-lg px-4 py-2"
                         placeholder="Digite o texto para converter..."
                         v-model="inputText"
                         @input="reflectInput"
@@ -18,7 +18,7 @@
                     <textarea
                         data-testid="text-output"
                         id="textOutput"
-                        class="w-full outline-none bg-gray-800 text-font-color placeholder-font-color h-48 resize-none border border-black rounded-lg px-4 py-2"
+                        class="w-full outline-none bg-gray-800 text-font-color placeholder-font-color h-48 resize-none border border-light-green rounded-lg px-4 py-2"
                         placeholder="Texto convertido..."
                         :value="convertedText"
                         readonly
@@ -85,6 +85,9 @@ const wordCount = computed(() => countWords(inputText.value));
 
 function reflectInput() {
     reflectedText.value = reflect(inputText.value);
+    if (inputText.value === '') {
+        convertedText.value = '';
+    }
 }
 
 function reflect(str: string) {
@@ -170,7 +173,7 @@ function convertFromBinary(str: string): string {
 
 <style lang="postcss">
 .btn {
-    @apply min-w-[20px] px-4 py-2 mr-4 mb-4 rounded-lg bg-gray-800 text-font-color text-center;
+    @apply min-w-[20px] px-4 py-2 mr-4 mb-4 rounded-lg bg-gray-800 text-font-color text-center border border-light-green;
 }
 
 .btn:hover {
