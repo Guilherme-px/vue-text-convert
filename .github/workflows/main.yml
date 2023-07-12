@@ -24,8 +24,8 @@ jobs:
       - name: Run unit tests
         run: npm run test:unit
 
-    #   - name: Start server and run Cypress tests
-    #     run: npm run test:e2e
+      - name: Start server and run Cypress tests
+        run: npm run test:e2e
 
       - name: Build application
         run: npm run build

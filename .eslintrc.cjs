@@ -19,6 +19,7 @@ module.exports = {
         ecmaVersion: 'latest'
     },
     rules: {
-        'vue/multi-word-component-names': 'off'
+        'vue/multi-word-component-names': 'off',
+        'cypress/unsafe-to-chain-command': 'off'
     }
 };
