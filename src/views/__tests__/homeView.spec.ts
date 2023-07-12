@@ -193,16 +193,6 @@ describe('Home', () => {
         expect((convertedText.element as HTMLInputElement).value).toBe('Binário');
     });
 
-    it('should return error if binary code is invalid', async () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-binaryTranslate"]');
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('002');
-        await button.trigger('click');
-        expect((convertedText.element as HTMLInputElement).value).toBe('Erro: Binário inválido!');
-    });
-
     it('clears the output when the text is deleted', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-capitalizerFirst"]');

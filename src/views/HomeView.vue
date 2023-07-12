@@ -1,5 +1,6 @@
 <template>
     <div>
+        <ToastedMessage :message="message" :isShow="showToasted" />
         <div class="bg-gray-900 rounded-lg overflow-hidden mx-10 my-10">
             <div class="p-6">
                 <div class="flex flex-col items-center mb-6 justify-center md:flex-row">
@@ -104,11 +105,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, type Ref } from 'vue';
+import ToastedMessage from '../components/toasted/ToastedMessage.vue';
 
 const inputText = ref('');
 const reflectedText = ref('');
-const convertedText = ref('');
+const convertedText: Ref<string | undefined> = ref('');
+const showToasted = ref(false);
+const message = ref('');
 
 const letterCount = computed(() => countLetters(inputText.value));
 const wordCount = computed(() => countWords(inputText.value));
@@ -122,9 +126,19 @@ async function copiarTexto() {
     if (convertedText.value) {
         try {
             await navigator.clipboard.writeText(convertedText.value);
-            console.log('Texto copiado com sucesso!');
+            message.value = 'Texto copiado com sucesso!';
+            showToasted.value = true;
+
+            setTimeout(() => {
+                showToasted.value = false;
+            }, 2000);
         } catch (error) {
-            console.error('Erro ao copiar o texto:', error);
+            message.value = 'Erro ao copiar o texto:';
+            showToasted.value = true;
+
+            setTimeout(() => {
+                showToasted.value = false;
+            }, 2000);
         }
     }
 }
@@ -210,30 +224,36 @@ function convertToBinary(str: string): string {
 }
 
 function convertFromBinary(str: string): string {
-    let text = '';
-    try {
-        if (!/^[01]+$/.test(str)) {
-            throw new Error('Erro: Texto não é um valor binário válido');
-        }
+    if (!/^[01]+$/.test(str)) {
+        message.value = 'Erro: Binário inválido!';
+        showToasted.value = true;
 
-        for (let i = 0; i < str.length; i += 8) {
-            const byte = str.slice(i, i + 8);
-            const charCode = parseInt(byte, 2);
-            const character = String.fromCharCode(charCode);
-            text += character;
-        }
-        return text;
-    } catch (error) {
-        return 'Erro: Binário inválido!';
+        setTimeout(() => {
+            showToasted.value = false;
+        }, 2000);
     }
+
+    let text = '';
+    for (let i = 0; i < str.length; i += 8) {
+        const byte = str.slice(i, i + 8);
+        const charCode = parseInt(byte, 2);
+        const character = String.fromCharCode(charCode);
+        text += character;
+    }
+    return text;
 }
 
-function base64Translate(str: string): string {
+function base64Translate(str: string): string | undefined {
     try {
         const decodeText = atob(str);
         return decodeText;
     } catch (error) {
-        return 'Erro: Não foi possivel traduzir o codígo';
+        message.value = 'Erro: Não foi possivel traduzir o codígo';
+        showToasted.value = true;
+
+        setTimeout(() => {
+            showToasted.value = false;
+        }, 2000);
     }
 }
 </script>

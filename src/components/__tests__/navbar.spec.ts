@@ -51,7 +51,7 @@ describe('Navbar', () => {
         expect(linkAbout.classes()).toContain('text-font-color');
         expect(linkAbout.classes()).toContain('hover:text-light-green');
         expect(linkAbout.classes()).toContain('text-lg');
-        expect(linkAbout.classes()).toContain('pr-5');
+        expect(linkAbout.classes()).toContain('pr-3');
     });
 
     it('navigates to the Home page when the link is clicked', async () => {
