@@ -2,7 +2,7 @@
     <div>
         <div class="bg-gray-900 rounded-lg overflow-hidden mx-10 my-10">
             <div class="p-6">
-                <div class="flex items-center mb-6">
+                <div class="flex flex-col items-center mb-6 justify-center md:flex-row">
                     <textarea
                         data-testid="text-input"
                         id="textInput"
@@ -13,7 +13,7 @@
                     ></textarea>
                     <font-awesome-icon
                         icon="fa-solid fa-arrow-right-arrow-left"
-                        class="mx-5 text-dark-green scale-x-150 -scale-y-125"
+                        class="mx-5 text-dark-green scale-x-150 -scale-y-125 my-5 md:my-0"
                     />
                     <textarea
                         data-testid="text-output"
@@ -25,8 +25,10 @@
                     ></textarea>
                 </div>
 
-                <div class="flex text-font-color mb-10 justify-between items-center">
-                    <div class="flex flex-col">
+                <div
+                    class="flex flex-col text-font-color mb-10 justify-between items-center sm:flex-row"
+                >
+                    <div class="flex flex-col text-center sm:text-left">
                         <div class="mb-2">
                             <span data-testid="text-letter" class="mr-2 font-semibold"
                                 >Total de letras:</span
@@ -42,7 +44,7 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div class="mt-8">
                         <button
                             data-testid="btn-copy"
                             class="btn-actions mr-6 bg-light-green hover:bg-gray-800"
@@ -60,7 +62,9 @@
                     </div>
                 </div>
 
-                <div>
+                <div
+                    class="flex flex-col justify-center items-center sm:flex-row sm:justify-start sm:flex-wrap"
+                >
                     <button
                         data-testid="btn-capitalizerFirst"
                         class="btn"

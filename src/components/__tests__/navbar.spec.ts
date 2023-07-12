@@ -29,9 +29,9 @@ describe('Navbar', () => {
         });
     });
 
-    it('displays the title "Convert Case"', () => {
+    it('displays the title "TextAlchemy"', () => {
         const title = wrapper.find('h1');
-        expect(title.text()).toBe('Convert Case');
+        expect(title.text()).toBe('TextAlchemy');
         expect(title.classes()).toContain('text-font-color');
         expect(title.classes()).toContain('font-semibold');
         expect(title.classes()).toContain('text-lg');

@@ -2,7 +2,7 @@
     <header>
         <nav class="flex items-center justify-between py-4 px-6 bg-gray-900">
             <div class="flex items-center">
-                <h1 class="text-font-color font-semibold text-lg">Convert Case</h1>
+                <h1 class="text-font-color font-semibold text-lg">TextAlchemy</h1>
             </div>
             <div class="flex items-center space-x-8">
                 <router-link
@@ -14,7 +14,7 @@
                 <router-link
                     to="/sobre"
                     data-testid="link-about"
-                    class="text-font-color hover:text-light-green text-lg pr-5"
+                    class="text-font-color hover:text-light-green text-lg pr-3"
                     >Sobre</router-link
                 >
             </div>
