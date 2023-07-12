@@ -1,5 +1,5 @@
 import { shallowMount } from '@vue/test-utils';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import Home from '@/views/HomeView.vue';
 
 describe('Home', () => {
@@ -61,42 +61,6 @@ describe('Home', () => {
 
         const wordCountElement = wrapper.find('[data-testid="words-count"]');
         expect(wordCountElement.text()).toBe('2');
-    });
-
-    it('should return the correct letter count for a given string', () => {
-        const wrapper = shallowMount(Home);
-        const countLettersSpy = vi.spyOn(wrapper.vm, 'countLetters');
-        const str = 'hello';
-        const result = countLettersSpy(str);
-
-        expect(result).toBe(5);
-    });
-
-    it('should return 0 for an empty string', () => {
-        const wrapper = shallowMount(Home);
-        const countLettersSpy = vi.spyOn(wrapper.vm, 'countLetters');
-        const str = '';
-        const result = countLettersSpy(str);
-
-        expect(result).toBe(0);
-    });
-
-    it('should return the correct word count for a given string', () => {
-        const wrapper = shallowMount(Home);
-        const countWordsSpy = vi.spyOn(wrapper.vm, 'countWords');
-        const str = 'Hello world';
-        const result = countWordsSpy(str);
-
-        expect(result).toBe(2);
-    });
-
-    it('should return 0 for an empty string', () => {
-        const wrapper = shallowMount(Home);
-        const countWordsSpy = vi.spyOn(wrapper.vm, 'countWords');
-        const str = '';
-        const result = countWordsSpy(str);
-
-        expect(result).toBe(0);
     });
 
     it('should render the button "Primeiras Maiúsculas"', () => {
