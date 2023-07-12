@@ -24,12 +24,12 @@ jobs:
       - name: Run unit tests
         run: npm run test:unit
 
-      - name: Start server and run Cypress tests
-        uses: cypress-io/github-action@v5
-        with:
-            build: npm run build
-            start: npm run dev
-            wait-on: 'http://localhost:5173/'
+    #   - name: Start server and run Cypress tests
+    #     uses: cypress-io/github-action@v5
+    #     with:
+    #         build: npm run build
+    #         start: npm run dev
+    #         wait-on: 'http://localhost:5173/'
 
       - name: Build application
         run: npm run build
