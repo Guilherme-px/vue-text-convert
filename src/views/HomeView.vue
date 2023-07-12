@@ -67,6 +67,13 @@
                     <button data-testid="btn-binaryTranslate" class="btn" @click="binaryTranslate">
                         Traduzir binário
                     </button>
+                    <button
+                        data-testid="btn-base64Translate"
+                        class="btn"
+                        @click="base64TranslateText"
+                    >
+                        Decodificar base64
+                    </button>
                 </div>
             </div>
         </div>
@@ -134,6 +141,10 @@ const binaryTranslate = () => {
     convertedText.value = convertFromBinary(inputText.value);
 };
 
+const base64TranslateText = () => {
+    convertedText.value = base64Translate(inputText.value);
+};
+
 function capitalizeFirstLetters(str: string): string {
     return str.toLowerCase().replace(/(?:^|\s)\S/g, (s) => s.toUpperCase());
 }
@@ -168,6 +179,15 @@ function convertFromBinary(str: string): string {
         text += character;
     }
     return text;
+}
+
+function base64Translate(str: string): string {
+    try {
+        const decodeText = atob(str);
+        return decodeText;
+    } catch (error) {
+        return 'Erro: Não foi possivel traduzir o codígo';
+    }
 }
 </script>
 

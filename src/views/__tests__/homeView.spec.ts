@@ -148,6 +148,13 @@ describe('Home', () => {
         expect(button.text()).toBe('Traduzir binário');
     });
 
+    it('should render the button "Decodificar base64"', () => {
+        const wrapper = shallowMount(Home);
+        const button = wrapper.find('[data-testid="btn-base64Translate"]');
+        expect(button.exists()).toBe(true);
+        expect(button.text()).toBe('Decodificar base64');
+    });
+
     it('should capitalize the first letters when "Primeiras Maiúsculas" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-capitalizerFirst"]');
@@ -226,5 +233,14 @@ describe('Home', () => {
 
         await textInput.setValue('');
         expect(wrapper.vm.convertedText).toBe('');
+    });
+
+    it('should reverse the text when "Decodificar base64" button is clicked', async () => {
+        const wrapper = shallowMount(Home);
+        const button = wrapper.find('[data-testid="btn-base64Translate"]');
+        const textInput = wrapper.find('#textInput');
+        await textInput.setValue('SGVsbG8gV29ybGQ');
+        await button.trigger('click');
+        expect(wrapper.vm.convertedText).toBe('Hello World');
     });
 });
