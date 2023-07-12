@@ -172,13 +172,21 @@ function convertToBinary(str: string): string {
 
 function convertFromBinary(str: string): string {
     let text = '';
-    for (let i = 0; i < str.length; i += 8) {
-        const byte = str.slice(i, i + 8);
-        const charCode = parseInt(byte, 2);
-        const character = String.fromCharCode(charCode);
-        text += character;
+    try {
+        if (!/^[01]+$/.test(str)) {
+            throw new Error('Erro: Texto não é um valor binário válido');
+        }
+
+        for (let i = 0; i < str.length; i += 8) {
+            const byte = str.slice(i, i + 8);
+            const charCode = parseInt(byte, 2);
+            const character = String.fromCharCode(charCode);
+            text += character;
+        }
+        return text;
+    } catch (error) {
+        return 'Erro: Binário inválido!';
     }
-    return text;
 }
 
 function base64Translate(str: string): string {

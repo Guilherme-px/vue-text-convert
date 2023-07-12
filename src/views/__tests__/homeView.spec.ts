@@ -202,7 +202,7 @@ describe('Home', () => {
         expect(wrapper.vm.convertedText).toBe('otxet retrevnI');
     });
 
-    it('should reverse the text when "Converter para binário" button is clicked', async () => {
+    it('should convert text to binary when "Converter para binário" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-textToBinary"]');
         const textInput = wrapper.find('#textInput');
@@ -213,13 +213,22 @@ describe('Home', () => {
         );
     });
 
-    it('should reverse the text when "Traduzir binário" button is clicked', async () => {
+    it('should translate the binary code when "Traduzir binário" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-binaryTranslate"]');
         const textInput = wrapper.find('#textInput');
         await textInput.setValue('01000010011010010110111011100001011100100110100101101111');
         await button.trigger('click');
         expect(wrapper.vm.convertedText).toBe('Binário');
+    });
+
+    it('should return error if binary code is invalid', async () => {
+        const wrapper = shallowMount(Home);
+        const button = wrapper.find('[data-testid="btn-binaryTranslate"]');
+        const textInput = wrapper.find('#textInput');
+        await textInput.setValue('002');
+        await button.trigger('click');
+        expect(wrapper.vm.convertedText).toBe('Erro: Binário inválido!');
     });
 
     it('clears the output when the text is deleted', async () => {
@@ -235,7 +244,7 @@ describe('Home', () => {
         expect(wrapper.vm.convertedText).toBe('');
     });
 
-    it('should reverse the text when "Decodificar base64" button is clicked', async () => {
+    it('should decode code in when "Decodificar base64" button is clicked', async () => {
         const wrapper = shallowMount(Home);
         const button = wrapper.find('[data-testid="btn-base64Translate"]');
         const textInput = wrapper.find('#textInput');
