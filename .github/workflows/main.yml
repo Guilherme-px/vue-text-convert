@@ -31,6 +31,6 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           install: false
-          start: bun run preview
+          start: bun run preview -- --host 0.0.0.0 --port 4173 --strictPort
           wait-on: "http://127.0.0.1:4173"
           command: bun run e2e
