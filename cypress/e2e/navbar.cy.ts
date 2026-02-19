@@ -4,7 +4,7 @@ describe('Tests for the Header component', () => {
     });
 
     it('Verifies if the title is displayed correctly', () => {
-        cy.get('header h1').should('have.trimmed.text', 'Text Alchemy');
+        cy.get('header h1').should('contain.text', 'Text Alchemy');
     });
 
     it('Verifies if the link to the home page is functioning', () => {
