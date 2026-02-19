@@ -1,68 +1,27 @@
-# frontend
+# Conversor de texto
 
-This template should help get you started developing with Vue 3 in Vite.
+[Link do site](https://vue-text-convert.vercel.app/)
 
-## Recommended IDE Setup
+Este é um simples projeto para converter alguns tipos de texto e te ajudar a ter uma agilidade caso precise formatar seu texto para um formato especifico.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+O projeto foi desenvolvido usando Vue 3 com typescript e também utilizei vite para ajudar na produtividade.
 
-## Type Support for `.vue` Imports in TS
+O projeto conta com testes unitários com vitest e vue test utils e também testes E2E com cypress, além de um script para automatizar o deploy na vercel com github actions.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+Algumas outras ferramentas foram utilizadas para ajudar a padronizar o código como eslint e prettier para formatar o código e aplicar regras de padronização e também o husky com lint-staged para ajudar a evitar que commits sejam feitos com algum erro de padronização no código.
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+## Rodar o projeto
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+Caso queira rodar na sua maquina basta siga as instruções:
 
-## Customize configuration
+ - Faça um clone do repositórios
+ - Na raiz do projeto rode o comando `bun install` para instalar as dependência do projeto
+ - Após instalar as dependência  use o comando `bun run dev` para iniciar o servidor
+(Todos os comandos estão na parte **script** no arquivo **package.json**)
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+### Rodando os testes
 
-## Project Setup
+Para rodar os testes com o vitest utilize o comando `bun run test:unit` que ele ira rodar os testes unitários.
 
-```sh
-npm install
-```
+Para rodar os testes com o cypress use o comando `bun run test:e2e:dev` o cypress irá abrir a interface gráfica dele, basta selecionar o navegador que deseja rodar os testes que ele irá abrir uma aba contendo todos os testes disponíveis, basta clicar em um dos testes que o cypress ira roda-los.
 
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-npm run test:unit
-```
-
-### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
-
-```sh
-npm run test:e2e:dev
-```
-
-This runs the end-to-end tests against the Vite development server.
-It is much faster than the production build.
-
-But it's still recommended to test the production build with `test:e2e` before deploying (e.g. in CI environments):
-
-```sh
-npm run build
-npm run test:e2e
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```

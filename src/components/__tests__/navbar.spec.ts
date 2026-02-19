@@ -1,76 +1,71 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { createRouter, createWebHistory } from 'vue-router';
-import { mount, VueWrapper } from '@vue/test-utils';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { createRouter, createMemoryHistory } from 'vue-router';
+import { mount, VueWrapper, flushPromises } from '@vue/test-utils';
 import AppNavbar from '../navbar/AppNavbar.vue';
 
 describe('Navbar', () => {
     let wrapper: VueWrapper;
+    let router: ReturnType<typeof createRouter>;
 
-    beforeEach(() => {
-        const router = createRouter({
-            history: createWebHistory(),
+    beforeEach(async () => {
+        router = createRouter({
+            history: createMemoryHistory(),
             routes: [
-                { path: '/', name: 'Home', redirect: '' },
-                {
-                    path: '/sobre',
-                    name: 'About',
-                    component: { template: '<div>Mock About Page</div>' }
-                }
+                { path: '/', name: 'Home', component: { template: '<div>Mock Home</div>' } },
+                { path: '/sobre', name: 'About', component: { template: '<div>Mock About</div>' } }
             ]
         });
 
+        await router.push('/');
+        await router.isReady();
+
         wrapper = mount(AppNavbar, {
             global: {
-                plugins: [router]
-            },
-            stubs: {
-                RouterView: true
+                plugins: [router],
+
+                stubs: {
+                    RouterLink: false,
+                    RouterView: true
+                }
             }
         });
+
+        await flushPromises();
     });
 
-    it('displays the title "TextAlchemy"', () => {
-        const title = wrapper.find('h1');
-        expect(title.text()).toBe('TextAlchemy');
-        expect(title.classes()).toContain('text-font-color');
-        expect(title.classes()).toContain('font-semibold');
-        expect(title.classes()).toContain('text-lg');
+    it('navigates to "/sobre" when clicking "Sobre" and marks it active', async () => {
+        const pushSpy = vi.spyOn(router, 'push');
+
+        await wrapper.get('[data-testid="link-about"]').trigger('click');
+
+        expect(pushSpy).toHaveBeenCalled();
+
+        await pushSpy.mock.results.at(-1)!.value;
+        await flushPromises();
+
+        expect(router.currentRoute.value.path).toBe('/sobre');
+
+        const linkAbout = wrapper.get('[data-testid="link-about"]');
+        expect(linkAbout.classes()).toContain('text-emerald-400');
+        expect(linkAbout.classes()).toContain('bg-emerald-500/10');
     });
 
-    it('displays the link "Início"', () => {
-        const linkHome = wrapper.find('[data-testid="link-home"]');
-        expect(linkHome.text()).toBe('Início');
-        expect(linkHome.classes()).toContain('text-font-color');
-        expect(linkHome.classes()).toContain('hover:text-light-green');
-        expect(linkHome.classes()).toContain('text-lg');
-    });
+    it('navigates to "/" when clicking "Início" and marks it active', async () => {
+        await router.push('/sobre');
+        await flushPromises();
 
-    it('displays the link "Sobre"', () => {
-        const linkAbout = wrapper.find('[data-testid="link-about"]');
-        expect(linkAbout.text()).toBe('Sobre');
-        expect(linkAbout.classes()).toContain('text-font-color');
-        expect(linkAbout.classes()).toContain('hover:text-light-green');
-        expect(linkAbout.classes()).toContain('text-lg');
-        expect(linkAbout.classes()).toContain('pr-3');
-    });
+        const pushSpy = vi.spyOn(router, 'push');
 
-    it('navigates to the Home page when the link is clicked', async () => {
-        const router = wrapper.vm.$router;
-        await router.isReady();
-        const linkHome = wrapper.find('[data-testid="link-home"]');
-        await linkHome.trigger('click');
+        await wrapper.get('[data-testid="link-home"]').trigger('click');
 
-        expect(wrapper.vm.$route.path).toBe('/');
-        expect(linkHome.classes()).toContain('router-link-active');
-    });
+        expect(pushSpy).toHaveBeenCalled();
+        await pushSpy.mock.results.at(-1)!.value;
+        await flushPromises();
 
-    it('navigates to the About page when the link is clicked', async () => {
-        const router = wrapper.vm.$router;
-        const linkAbout = wrapper.find('[data-testid="link-about"]');
-        await linkAbout.trigger('click');
-        await router.isReady();
+        expect(router.currentRoute.value.path).toBe('/');
 
-        expect(wrapper.vm.$route.path).toBe('/sobre');
-        expect(linkAbout.classes()).toContain('router-link-active');
+        const linkHome = wrapper.get('[data-testid="link-home"]');
+        expect(linkHome.classes()).toContain('text-emerald-400');
+        expect(linkHome.classes()).toContain('bg-emerald-500/10');
     });
 });

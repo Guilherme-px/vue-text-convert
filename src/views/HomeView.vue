@@ -1,277 +1,267 @@
 <template>
-    <div>
-        <ToastedMessage :message="message" :isShow="showToasted" />
-        <div class="bg-gray-900 rounded-lg overflow-hidden mx-10 my-10">
-            <div class="p-6">
-                <div class="flex flex-col items-center mb-6 justify-center md:flex-row">
-                    <textarea
-                        data-testid="text-input"
-                        id="textInput"
-                        class="w-full outline-none bg-gray-800 text-font-color placeholder-font-color h-48 resize-none border border-light-green rounded-lg px-4 py-2"
-                        placeholder="Digite o texto para converter..."
-                        v-model="inputText"
-                        @input="reflectInput"
-                    ></textarea>
-                    <font-awesome-icon
-                        icon="fa-solid fa-arrow-right-arrow-left"
-                        class="mx-5 text-dark-green scale-x-150 -scale-y-125 my-5 md:my-0"
+    <div
+        class="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 text-white relative overflow-hidden"
+    >
+        <ToastedMessage :message="message" :isShow="showToasted" :type="toastType" />
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div
+                class="absolute -top-40 -right-40 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl animate-pulse"
+            />
+            <div
+                class="absolute -bottom-40 -left-40 w-96 h-96 bg-teal-500/10 rounded-full blur-3xl animate-pulse"
+                style="animation-delay: 1s"
+            />
+            <div
+                class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-600/5 rounded-full blur-3xl"
+            />
+        </div>
+
+        <main class="relative z-10 max-w-7xl mx-auto px-6 py-12">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">
+                    <span
+                        class="bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent"
+                    >
+                        Transforme seu texto
+                    </span>
+                </h2>
+                <p class="text-gray-400 max-w-2xl mx-auto text-lg">
+                    Ferramenta poderosa para converter, formatar e manipular texto de diversas
+                    formas. Simples, rápido e elegante.
+                </p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-6 mb-8 relative">
+                <div class="group relative">
+                    <div
+                        class="absolute -inset-0.5 bg-gradient-to-r from-emerald-500/20 to-teal-500/20 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"
                     />
-                    <textarea
-                        data-testid="text-output"
-                        id="textOutput"
-                        class="w-full outline-none bg-gray-800 text-font-color placeholder-font-color h-48 resize-none border border-light-green rounded-lg px-4 py-2"
-                        placeholder="Texto convertido..."
-                        :value="convertedText"
-                        readonly
-                    ></textarea>
+                    <div
+                        class="relative bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden"
+                    >
+                        <div
+                            class="px-5 py-3 border-b border-white/5 flex items-center justify-between"
+                        >
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 rounded-full bg-emerald-400/80" />
+                                <span class="text-sm font-medium text-gray-400"
+                                    >Texto Original</span
+                                >
+                            </div>
+                            <span class="text-xs text-gray-600">Entrada</span>
+                        </div>
+                        <textarea
+                            data-testid="text-input"
+                            id="textInput"
+                            :value="inputText"
+                            @input="reflectInput"
+                            placeholder="Digite o texto para converter..."
+                            class="w-full h-48 bg-transparent p-5 text-gray-100 placeholder-gray-600 resize-none focus:outline-none font-mono text-sm leading-relaxed"
+                        ></textarea>
+                    </div>
                 </div>
 
                 <div
-                    class="flex flex-col text-font-color mb-10 justify-between items-center sm:flex-row"
+                    class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20"
                 >
-                    <div class="flex flex-col text-center sm:text-left">
-                        <div class="mb-2">
-                            <span data-testid="text-letter" class="mr-2 font-semibold"
-                                >Total de letras:</span
-                            >
-                            <span data-testid="letter-count">{{ letterCount }}</span>
-                        </div>
+                    <div
+                        class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center shadow-lg shadow-emerald-500/30"
+                    >
+                        <font-awesome-icon icon="fa-solid fa-arrow-right" class="text-lg" />
+                    </div>
+                </div>
 
+                <div class="group relative">
+                    <div
+                        class="absolute -inset-0.5 bg-gradient-to-r from-teal-500/20 to-emerald-500/20 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-300"
+                    />
+                    <div
+                        class="relative bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden"
+                    >
+                        <div
+                            class="px-5 py-3 border-b border-white/5 flex items-center justify-between"
+                        >
+                            <div class="flex items-center gap-2">
+                                <div class="w-3 h-3 rounded-full bg-teal-400/80" />
+                                <span class="text-sm font-medium text-gray-400"
+                                    >Texto Convertido</span
+                                >
+                            </div>
+                            <span class="text-xs text-gray-600">Saída</span>
+                        </div>
+                        <textarea
+                            data-testid="text-output"
+                            id="textOutput"
+                            :value="convertedText"
+                            placeholder="Texto convertido aparecerá aqui..."
+                            readonly
+                            class="w-full h-48 bg-transparent p-5 text-gray-100 placeholder-gray-600 resize-none focus:outline-none font-mono text-sm leading-relaxed"
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="flex flex-col md:flex-row items-center justify-between gap-4 mb-10 p-4 bg-gray-900/50 backdrop-blur-xl rounded-xl border border-white/5"
+            >
+                <div class="flex items-center gap-6">
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center"
+                        >
+                            <span class="text-emerald-400 text-sm font-bold">L</span>
+                        </div>
                         <div>
-                            <span data-testid="text-words" class="mr-2 font-semibold"
-                                >Total de palavras:</span
-                            >
-                            <span data-testid="words-count">{{ wordCount }}</span>
+                            <p class="text-xs text-gray-500">Total de letras</p>
+                            <p data-testid="letter-count" class="text-lg font-semibold text-white">
+                                {{ letterCount }}
+                            </p>
                         </div>
                     </div>
-
-                    <div class="mt-8">
-                        <button
-                            data-testid="btn-copy"
-                            class="btn-actions mr-6 bg-light-green hover:bg-gray-800"
-                            @click="copiarTexto"
+                    <div class="w-px h-10 bg-white/10" />
+                    <div class="flex items-center gap-2">
+                        <div
+                            class="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center"
                         >
-                            Copiar
-                        </button>
-                        <button
-                            data-testid="btn-clear"
-                            class="btn-actions border-light-green hover:bg-gray-700"
-                            @click="clearInputs"
-                        >
-                            Limpar
-                        </button>
+                            <span class="text-teal-400 text-sm font-bold">P</span>
+                        </div>
+                        <div>
+                            <p class="text-xs text-gray-500">Total de palavras</p>
+                            <p data-testid="words-count" class="text-lg font-semibold text-white">
+                                {{ wordCount }}
+                            </p>
+                        </div>
                     </div>
                 </div>
-
-                <div
-                    class="flex flex-col justify-center items-center sm:flex-row sm:justify-start sm:flex-wrap"
-                >
+                <div class="flex items-center gap-3">
                     <button
-                        data-testid="btn-capitalizerFirst"
-                        class="btn"
-                        @click="capitalizerFirst"
+                        data-testid="btn-copy"
+                        @click="copiarTexto"
+                        :disabled="!convertedText"
+                        :class="
+                            copied
+                                ? 'bg-emerald-500 text-gray-900'
+                                : 'bg-gradient-to-r from-emerald-500 to-teal-500 text-gray-900 hover:shadow-lg hover:shadow-emerald-500/25 hover:scale-105 disabled:opacity-50 disabled:hover:scale-100'
+                        "
+                        class="px-5 py-2.5 rounded-xl font-medium text-sm transition-all duration-300 flex items-center gap-2"
                     >
-                        Primeiras Maiúsculas
-                    </button>
-                    <button data-testid="btn-allCapitalizer" class="btn" @click="allCapitalizer">
-                        Todas maiúsculas
-                    </button>
-                    <button data-testid="btn-lowerCase" class="btn" @click="lowerCase">
-                        Todas minúsculas
-                    </button>
-                    <button data-testid="btn-hashtagsCreator" class="btn" @click="hashtagsCreator">
-                        Criador de hashtag
-                    </button>
-                    <button data-testid="btn-reverseText" class="btn" @click="reverseText">
-                        Inverter texto
-                    </button>
-                    <button data-testid="btn-textToBinary" class="btn" @click="binaryCreator">
-                        Converter para binário
-                    </button>
-                    <button data-testid="btn-binaryTranslate" class="btn" @click="binaryTranslate">
-                        Traduzir binário
+                        <font-awesome-icon icon="fa-solid fa-check" class="text-lg" v-if="copied" />
+                        <font-awesome-icon icon="fa-solid fa-copy" class="text-lg" v-else />
+                        {{ copied ? 'Copiado!' : 'Copiar' }}
                     </button>
                     <button
-                        data-testid="btn-base64Translate"
-                        class="btn"
-                        @click="base64TranslateText"
+                        data-testid="btn-clear"
+                        @click="clearInputs"
+                        class="px-5 py-2.5 rounded-xl font-medium text-sm border border-white/10 text-gray-400 hover:text-white hover:border-white/20 hover:bg-white/5 transition-all duration-300 flex items-center gap-2"
                     >
-                        Decodificar base64
+                        <font-awesome-icon icon="fa-solid fa-trash-alt" class="text-lg" />
+                        Limpar
                     </button>
                 </div>
             </div>
-        </div>
+
+            <div class="mb-8">
+                <h3 class="text-lg font-semibold text-gray-300 mb-4 flex items-center gap-2">
+                    <font-awesome-icon icon="fa-solid fa-gears" class="text-lg text-emerald-400" />
+                    Ferramentas de Conversão
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <button
+                        v-for="tool in tools"
+                        :key="tool.id"
+                        :data-testid="tool.testId"
+                        @click="tool.action"
+                        :class="
+                            activeTool === tool.id
+                                ? 'bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border-emerald-500/50'
+                                : 'bg-gray-900/50 border-white/5 hover:border-emerald-500/30 hover:bg-gray-800/50'
+                        "
+                        class="group relative p-4 rounded-xl border transition-all duration-300 text-left"
+                    >
+                        <div class="flex items-center gap-3 mb-2">
+                            <div
+                                :class="
+                                    activeTool === tool.id
+                                        ? 'bg-emerald-500 text-gray-900'
+                                        : 'bg-gray-800 text-emerald-400 group-hover:bg-emerald-500/20'
+                                "
+                                class="w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-300"
+                            >
+                                <font-awesome-icon
+                                    v-if="isFaIcon(tool.icon)"
+                                    :icon="tool.icon.name"
+                                    class="text-base"
+                                />
+                                <span v-else class="font-mono font-bold text-sm">
+                                    {{ tool.icon }}
+                                </span>
+                            </div>
+
+                            <font-awesome-icon
+                                icon="fa-solid fa-angle-right"
+                                class="text-lg text-gray-600 group-hover:text-emerald-400 transition-colors ml-auto"
+                            />
+                        </div>
+                        <p
+                            :class="
+                                activeTool === tool.id
+                                    ? 'text-emerald-400'
+                                    : 'text-gray-300 group-hover:text-white'
+                            "
+                            class="font-medium text-sm transition-colors"
+                        >
+                            {{ tool.label }}
+                        </p>
+                        <p class="text-xs text-gray-500 mt-1 truncate">
+                            {{ tool.description }}
+                        </p>
+                    </button>
+                </div>
+            </div>
+        </main>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, type Ref } from 'vue';
-import ToastedMessage from '../components/toasted/ToastedMessage.vue';
+import ToastedMessage from '@/components/toasted/ToastedMessage.vue';
+import { useTextTools } from '@/composables/useTextTools';
 
-const inputText = ref('');
-const reflectedText = ref('');
-const convertedText: Ref<string | undefined> = ref('');
-const showToasted = ref(false);
-const message = ref('');
-
-const letterCount = computed(() => countLetters(inputText.value));
-const wordCount = computed(() => countWords(inputText.value));
-
-function clearInputs() {
-    convertedText.value = '';
-    inputText.value = '';
-}
-
-async function copiarTexto() {
-    if (convertedText.value) {
-        try {
-            await navigator.clipboard.writeText(convertedText.value);
-            message.value = 'Texto copiado com sucesso!';
-            showToasted.value = true;
-
-            setTimeout(() => {
-                showToasted.value = false;
-            }, 2000);
-        } catch (error) {
-            message.value = 'Erro ao copiar o texto:';
-            showToasted.value = true;
-
-            setTimeout(() => {
-                showToasted.value = false;
-            }, 2000);
-        }
-    }
-}
-
-function reflectInput() {
-    reflectedText.value = reflect(inputText.value);
-    if (inputText.value === '') {
-        convertedText.value = '';
-    }
-}
-
-function reflect(str: string) {
-    return str;
-}
-
-function countLetters(str: string): number {
-    return str.replace(/(\r\n|\n|\r)/g, ' ').trim().length;
-}
-
-function countWords(str: string): number {
-    const words = str
-        .replace(/(\r\n|\n|\r)/g, ' ')
-        .trim()
-        .split(/\s+/g);
-    return words.length === 1 && words[0] === '' ? 0 : words.length;
-}
-
-const capitalizerFirst = () => {
-    convertedText.value = capitalizeFirstLetters(inputText.value);
-};
-
-const allCapitalizer = () => {
-    convertedText.value = inputText.value.toUpperCase();
-};
-
-const lowerCase = () => {
-    convertedText.value = inputText.value.toLowerCase();
-};
-
-const hashtagsCreator = () => {
-    convertedText.value = createHashtags(inputText.value);
-};
-
-const reverseText = () => {
-    convertedText.value = reverseString(inputText.value);
-};
-
-const binaryCreator = () => {
-    convertedText.value = convertToBinary(inputText.value);
-};
-
-const binaryTranslate = () => {
-    convertedText.value = convertFromBinary(inputText.value);
-};
-
-const base64TranslateText = () => {
-    convertedText.value = base64Translate(inputText.value);
-};
-
-function capitalizeFirstLetters(str: string): string {
-    return str.toLowerCase().replace(/(?:^|\s)\S/g, (s) => s.toUpperCase());
-}
-
-function createHashtags(str: string, char: string = '#'): string {
-    return str
-        .split(' ')
-        .map((word) => (word.startsWith(char) ? word : `${char}${word}`))
-        .join(' ');
-}
-
-function reverseString(str: string): string {
-    return str.split('').reverse().join('');
-}
-
-function convertToBinary(str: string): string {
-    let binary = '';
-    for (let i = 0; i < str.length; i++) {
-        const charCode = str.charCodeAt(i);
-        const binaryCode = charCode.toString(2);
-        binary += binaryCode.padStart(8, '0');
-    }
-    return binary;
-}
-
-function convertFromBinary(str: string): string {
-    if (!/^[01]+$/.test(str)) {
-        message.value = 'Erro: Binário inválido!';
-        showToasted.value = true;
-
-        setTimeout(() => {
-            showToasted.value = false;
-        }, 2000);
-    }
-
-    let text = '';
-    for (let i = 0; i < str.length; i += 8) {
-        const byte = str.slice(i, i + 8);
-        const charCode = parseInt(byte, 2);
-        const character = String.fromCharCode(charCode);
-        text += character;
-    }
-    return text;
-}
-
-function base64Translate(str: string): string | undefined {
-    try {
-        const decodeText = atob(str);
-        return decodeText;
-    } catch (error) {
-        message.value = 'Erro: Não foi possivel traduzir o codígo';
-        showToasted.value = true;
-
-        setTimeout(() => {
-            showToasted.value = false;
-        }, 2000);
-    }
-}
+const {
+    inputText,
+    convertedText,
+    copied,
+    showToasted,
+    message,
+    activeTool,
+    letterCount,
+    wordCount,
+    tools,
+    isFaIcon,
+    reflectInput,
+    clearInputs,
+    copiarTexto,
+    toastType
+} = useTextTools();
 </script>
 
-<style lang="postcss">
-.btn {
-    @apply min-w-[20px] px-4 py-2 mr-4 mb-4 rounded-lg bg-gray-800 text-font-color text-center border border-light-green;
+<style scoped>
+@keyframes pulse {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
 }
 
-.btn-actions {
-    @apply px-4 py-2 rounded-lg text-font-color text-center border;
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.btn:hover {
-    @apply cursor-pointer shadow-md bg-gray-700 text-light-green;
-}
-
-.btn-actions:hover {
-    @apply cursor-pointer shadow-md text-light-green;
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>

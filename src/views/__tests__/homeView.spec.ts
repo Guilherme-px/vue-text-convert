@@ -1,235 +1,160 @@
 import { shallowMount } from '@vue/test-utils';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest';
 import Home from '@/views/HomeView.vue';
+import { toolsMeta } from '@/utils/toolsList';
+
+const ToastedMessageStub = {
+    name: 'ToastedMessage',
+    props: ['message', 'isShow', 'type'],
+    template: `
+    <div v-if="isShow" data-testid="toast-stub" :data-type="type">
+      {{ message }}
+    </div>
+  `
+};
 
 describe('Home', () => {
-    it('should render the component correctly', () => {
-        const wrapper = shallowMount(Home);
-        expect(wrapper.exists()).toBe(true);
+    beforeEach(() => {
+        vi.useFakeTimers();
+
+        Object.assign(navigator, {
+            clipboard: {
+                writeText: vi.fn().mockResolvedValue(undefined)
+            }
+        });
+
+        vi.stubGlobal('atob', (b64: string) => Buffer.from(b64, 'base64').toString('binary'));
     });
 
-    it('should contain the textInput and textOutput textareas', () => {
-        const wrapper = shallowMount(Home);
-
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const textOutput = wrapper.find('[data-testid="text-output"]');
-        expect(textInput.exists()).toBe(true);
-        expect(textOutput.exists()).toBe(true);
+    afterEach(() => {
+        vi.runOnlyPendingTimers();
+        vi.useRealTimers();
+        vi.restoreAllMocks();
+        vi.unstubAllGlobals();
     });
 
-    it('should bind inputText to the input value of textInput', async () => {
-        const wrapper = shallowMount(Home);
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        await textInput.setValue('Hello');
-        expect((textInput.element as HTMLInputElement).value).toBe('Hello');
+    function mountHome() {
+        return shallowMount(Home, {
+            global: {
+                stubs: {
+                    ToastedMessage: ToastedMessageStub,
+                    'font-awesome-icon': true
+                }
+            }
+        });
+    }
+
+    it('renders input/output textareas and counters', () => {
+        const wrapper = mountHome();
+
+        expect(wrapper.find('[data-testid="text-input"]').exists()).toBe(true);
+        expect(wrapper.find('[data-testid="text-output"]').exists()).toBe(true);
+        expect(wrapper.find('[data-testid="letter-count"]').exists()).toBe(true);
+        expect(wrapper.find('[data-testid="words-count"]').exists()).toBe(true);
     });
 
-    it('should reflect inputText to outputText', async () => {
-        const wrapper = shallowMount(Home);
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        await textInput.setValue('Hello');
-        expect((textInput.element as HTMLInputElement).value).toBe('Hello');
+    it('renders all tool buttons from toolsMeta', () => {
+        const wrapper = mountHome();
+
+        for (const meta of toolsMeta) {
+            const btn = wrapper.find(`[data-testid="${meta.testId}"]`);
+            expect(btn.exists()).toBe(true);
+            expect(btn.text()).toContain(meta.label);
+        }
     });
 
-    it('should contain elements for letter count and word count', () => {
-        const wrapper = shallowMount(Home);
+    it('does not update output when typing with no active tool selected', async () => {
+        const wrapper = mountHome();
 
-        const letterCountElement = wrapper.find('[data-testid="text-letter"]');
-        expect(letterCountElement.exists()).toBe(true);
+        const input = wrapper.find('[data-testid="text-input"]');
+        const output = wrapper.find('[data-testid="text-output"]');
 
-        const wordCountElement = wrapper.find('[data-testid="text-words"]');
-        expect(wordCountElement.exists()).toBe(true);
+        await input.setValue('hello');
+        expect((output.element as HTMLTextAreaElement).value).toBe('');
     });
 
-    it('should display the correct letter count', async () => {
-        const wrapper = shallowMount(Home);
+    it('activates a tool and auto-converts while typing (uppercase)', async () => {
+        const wrapper = mountHome();
 
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        await textInput.setValue('Hello');
+        const input = wrapper.find('[data-testid="text-input"]');
+        const output = wrapper.find('[data-testid="text-output"]');
+        const uppercase = wrapper.find('[data-testid="btn-allCapitalizer"]');
 
-        const letterCountElement = wrapper.find('[data-testid="letter-count"]');
-        expect(letterCountElement.text()).toBe('5');
+        await input.setValue('hello');
+        await uppercase.trigger('click');
+        expect((output.element as HTMLTextAreaElement).value).toBe('HELLO');
+
+        await input.setValue('hello world');
+        expect((output.element as HTMLTextAreaElement).value).toBe('HELLO WORLD');
+
+        expect(uppercase.classes().join(' ')).toContain('bg-gradient-to-br');
     });
 
-    it('should display the correct word count', async () => {
-        const wrapper = shallowMount(Home);
+    it('clears input/output and removes the active tool state when clicking Clear', async () => {
+        const wrapper = mountHome();
 
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        await textInput.setValue('Hello world');
+        const input = wrapper.find('[data-testid="text-input"]');
+        const output = wrapper.find('[data-testid="text-output"]');
+        const uppercase = wrapper.find('[data-testid="btn-allCapitalizer"]');
+        const clear = wrapper.find('[data-testid="btn-clear"]');
 
-        await textInput.trigger('input');
+        await input.setValue('test');
+        await uppercase.trigger('click');
+        expect((output.element as HTMLTextAreaElement).value).toBe('TEST');
 
-        const wordCountElement = wrapper.find('[data-testid="words-count"]');
-        expect(wordCountElement.text()).toBe('2');
+        await clear.trigger('click');
+
+        expect((input.element as HTMLTextAreaElement).value).toBe('');
+        expect((output.element as HTMLTextAreaElement).value).toBe('');
+        expect(uppercase.classes().join(' ')).not.toContain('bg-gradient-to-br');
     });
 
-    it('should render the button "Primeiras Maiúsculas"', () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-capitalizerFirst"]');
-        expect(button.exists()).toBe(true);
-        expect(button.text()).toBe('Primeiras Maiúsculas');
+    it('copies the converted text to clipboard when Copy is clicked', async () => {
+        const wrapper = mountHome();
+
+        const input = wrapper.find('[data-testid="text-input"]');
+        const uppercase = wrapper.find('[data-testid="btn-allCapitalizer"]');
+        const copy = wrapper.find('[data-testid="btn-copy"]');
+
+        await input.setValue('test text');
+        await uppercase.trigger('click');
+        await copy.trigger('click');
+
+        expect(navigator.clipboard.writeText).toHaveBeenCalledWith('TEST TEXT');
     });
 
-    it('should render the button "Todas maiúsculas"', () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-allCapitalizer"]');
-        expect(button.exists()).toBe(true);
-        expect(button.text()).toBe('Todas maiúsculas');
-    });
+    it('shows an error toast for invalid base64 input (type + message)', async () => {
+        const wrapper = mountHome();
 
-    it('should render the button "Todas minúsculas"', () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-lowerCase"]');
-        expect(button.exists()).toBe(true);
-        expect(button.text()).toBe('Todas minúsculas');
-    });
-
-    it('should render the button "Criador de hashtag"', () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-hashtagsCreator"]');
-        expect(button.exists()).toBe(true);
-        expect(button.text()).toBe('Criador de hashtag');
-    });
-
-    it('should render the button "Inverter texto"', () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-reverseText"]');
-        expect(button.exists()).toBe(true);
-        expect(button.text()).toBe('Inverter texto');
-    });
-
-    it('should render the button "Converter para binário"', () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-textToBinary"]');
-        expect(button.exists()).toBe(true);
-        expect(button.text()).toBe('Converter para binário');
-    });
-
-    it('should render the button "Traduzir binário"', () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-binaryTranslate"]');
-        expect(button.exists()).toBe(true);
-        expect(button.text()).toBe('Traduzir binário');
-    });
-
-    it('should render the button "Decodificar base64"', () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-base64Translate"]');
-        expect(button.exists()).toBe(true);
-        expect(button.text()).toBe('Decodificar base64');
-    });
-
-    it('should capitalize the first letters when "Primeiras Maiúsculas" button is clicked', async () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-capitalizerFirst"]');
-
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('primeiras maiúsculas');
-        await button.trigger('click');
-        expect((convertedText.element as HTMLInputElement).value).toBe('Primeiras Maiúsculas');
-    });
-
-    it('should convert the text to uppercase when "Todas maiúsculas" button is clicked', async () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-allCapitalizer"]');
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('todas maiúsculas');
-        await button.trigger('click');
-        expect((convertedText.element as HTMLInputElement).value).toBe('TODAS MAIÚSCULAS');
-    });
-
-    it('should convert the text to lowercase when "Todas minúsculas" button is clicked', async () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-lowerCase"]');
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('TODAS MINÚSCULAS');
-        await button.trigger('click');
-
-        expect((convertedText.element as HTMLInputElement).value).toBe('todas minúsculas');
-    });
-
-    it('should create hashtags when "Criador de hashtag" button is clicked', async () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-hashtagsCreator"]');
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('Criador de hashtag');
-        await button.trigger('click');
-        expect((convertedText.element as HTMLInputElement).value).toBe('#Criador #de #hashtag');
-    });
-
-    it('should reverse the text when "Inverter texto" button is clicked', async () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-reverseText"]');
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('Inverter texto');
-        await button.trigger('click');
-        expect((convertedText.element as HTMLInputElement).value).toBe('otxet retrevnI');
-    });
-
-    it('should convert text to binary when "Converter para binário" button is clicked', async () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-textToBinary"]');
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('Binário');
-        await button.trigger('click');
-        expect((convertedText.element as HTMLInputElement).value).toBe(
-            '01000010011010010110111011100001011100100110100101101111'
+        vi.stubGlobal(
+            'atob',
+            vi.fn(() => {
+                throw new Error('InvalidCharacterError');
+            })
         );
+
+        const input = wrapper.find('[data-testid="text-input"]');
+        const base64 = wrapper.find('[data-testid="btn-base64Translate"]');
+
+        await input.setValue('!!!invalid!!!');
+        await base64.trigger('click');
+
+        const toast = wrapper.find('[data-testid="toast-stub"]');
+        expect(toast.exists()).toBe(true);
+        expect(toast.text()).toMatch(/Erro/i);
+        expect(toast.attributes('data-type')).toBe('error');
     });
 
-    it('should translate the binary code when "Traduzir binário" button is clicked', async () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-binaryTranslate"]');
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('01000010011010010110111011100001011100100110100101101111');
-        await button.trigger('click');
-        expect((convertedText.element as HTMLInputElement).value).toBe('Binário');
-    });
+    it('decodes valid base64 input', async () => {
+        const wrapper = mountHome();
 
-    it('clears the output when the text is deleted', async () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-capitalizerFirst"]');
+        const input = wrapper.find('[data-testid="text-input"]');
+        const output = wrapper.find('[data-testid="text-output"]');
+        const base64 = wrapper.find('[data-testid="btn-base64Translate"]');
 
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('Hello');
-        await button.trigger('click');
-        expect((convertedText.element as HTMLInputElement).value).toBe('Hello');
+        await input.setValue('SGVsbG8gV29ybGQ=');
+        await base64.trigger('click');
 
-        await textInput.setValue('');
-        expect((convertedText.element as HTMLInputElement).value).toBe('');
-    });
-
-    it('should decode code base64 when "Decodificar base64" button is clicked', async () => {
-        const wrapper = shallowMount(Home);
-        const button = wrapper.find('[data-testid="btn-base64Translate"]');
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('SGVsbG8gV29ybGQ');
-        await button.trigger('click');
-        expect((convertedText.element as HTMLInputElement).value).toBe('Hello World');
-    });
-
-    it('should clear textarea when "Limpar" button is clicked', async () => {
-        const wrapper = shallowMount(Home);
-        const buttonClear = wrapper.find('[data-testid="btn-clear"]');
-        const button = wrapper.find('[data-testid="btn-base64Translate"]');
-
-        const textInput = wrapper.find('[data-testid="text-input"]');
-        const convertedText = wrapper.find('[data-testid="text-output"]');
-        await textInput.setValue('SGVsbG8gV29ybGQ');
-
-        await button.trigger('click');
-        await buttonClear.trigger('click');
-
-        expect((convertedText.element as HTMLInputElement).value).toBe('');
-        expect((textInput.element as HTMLInputElement).value).toBe('');
+        expect((output.element as HTMLTextAreaElement).value).toBe('Hello World');
     });
 });

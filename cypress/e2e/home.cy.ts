@@ -3,79 +3,76 @@ describe('Home', () => {
         cy.visit('/');
     });
 
-    it('should capitalize first letters when "Primeiras Maiúsculas" button is clicked', () => {
-        const inputText = 'hello world';
-        const expectedOutput = 'Hello World';
-        cy.get('[data-testid="text-input"]').type(inputText);
+    it('capitalizes first letters when "Primeiras Maiúsculas" is clicked', () => {
+        cy.get('[data-testid="text-input"]').type('hello world');
         cy.get('[data-testid="btn-capitalizerFirst"]').click();
-        cy.get('[data-testid="text-output"]').should('have.value', expectedOutput);
+        cy.get('[data-testid="text-output"]').should('have.value', 'Hello World');
     });
 
-    it('should convert text to binary when "Converter para binário" button is clicked', () => {
-        const inputText = 'Hello';
-        const expectedOutput = '0100100001100101011011000110110001101111';
-        cy.get('[data-testid="text-input"]').type(inputText);
+    it('converts text to binary (with spaces between bytes) when "Converter para Binário" is clicked', () => {
+        cy.get('[data-testid="text-input"]').type('Hello');
         cy.get('[data-testid="btn-textToBinary"]').click();
-        cy.get('[data-testid="text-output"]').should('have.value', expectedOutput);
+
+        cy.get('[data-testid="text-output"]').should(
+            'have.value',
+            '01001000 01100101 01101100 01101100 01101111'
+        );
     });
 
-    it('should convert text to lowercase when "Todas minúsculas" button is clicked', () => {
-        const inputText = 'Hello World';
-        const expectedOutput = 'hello world';
-        cy.get('[data-testid="text-input"]').type(inputText);
+    it('converts text to lowercase when "Todas Minúsculas" is clicked', () => {
+        cy.get('[data-testid="text-input"]').type('Hello World');
         cy.get('[data-testid="btn-lowerCase"]').click();
-        cy.get('[data-testid="text-output"]').should('have.value', expectedOutput);
+        cy.get('[data-testid="text-output"]').should('have.value', 'hello world');
     });
 
-    it('should create hashtags when "Criador de hashtag" button is clicked', () => {
-        const inputText = 'Hello World';
-        const expectedOutput = '#Hello #World';
-        cy.get('[data-testid="text-input"]').type(inputText);
+    it('creates hashtags when "Criador de Hashtag" is clicked', () => {
+        cy.get('[data-testid="text-input"]').type('Hello World');
         cy.get('[data-testid="btn-hashtagsCreator"]').click();
-        cy.get('[data-testid="text-output"]').should('have.value', expectedOutput);
+        cy.get('[data-testid="text-output"]').should('have.value', '#Hello #World');
     });
 
-    it('should reverse the input text when "Inverter texto" button is clicked', () => {
-        const inputText = 'Hello World';
-        const expectedOutput = 'dlroW olleH';
-        cy.get('[data-testid="text-input"]').type(inputText);
+    it('reverses text when "Inverter Texto" is clicked', () => {
+        cy.get('[data-testid="text-input"]').type('Hello World');
         cy.get('[data-testid="btn-reverseText"]').click();
-        cy.get('[data-testid="text-output"]').should('have.value', expectedOutput);
+        cy.get('[data-testid="text-output"]').should('have.value', 'dlroW olleH');
     });
 
-    it('should clear the input and output text when "Limpar" button is clicked', () => {
-        const inputText = 'Hello World';
-        cy.get('[data-testid="text-input"]').type(inputText);
+    it('clears input and output when "Limpar" is clicked', () => {
+        cy.get('[data-testid="text-input"]').type('Hello World');
         cy.get('[data-testid="btn-clear"]').click();
         cy.get('[data-testid="text-input"]').should('have.value', '');
         cy.get('[data-testid="text-output"]').should('have.value', '');
     });
 
-    it('should display the total number of letters in the input text', () => {
-        const inputText = 'Hello World';
-        const expectedLetterCount = inputText.length.toString();
-        cy.get('[data-testid="text-input"]').type(inputText);
-        cy.get('[data-testid="letter-count"]').should('have.text', expectedLetterCount);
+    it('shows the correct letter count (ignoring spaces and line breaks)', () => {
+        cy.get('[data-testid="text-input"]').type('Hello World');
+        cy.get('[data-testid="letter-count"]').should('have.text', '10'); // "HelloWorld" = 10
     });
 
-    it('should display the total number of words in the input text', () => {
-        const inputText = 'Hello World';
-        const expectedWordCount = '2';
-        cy.get('[data-testid="text-input"]').type(inputText);
-        cy.get('[data-testid="words-count"]').should('have.text', expectedWordCount);
+    it('shows the correct word count', () => {
+        cy.get('[data-testid="text-input"]').type('Hello World');
+        cy.get('[data-testid="words-count"]').should('have.text', '2');
     });
 
-    it('should copy the converted text to the clipboard when "Copiar" button is clicked', () => {
-        const inputText = 'Hello World';
-        const expectedOutput = 'HELLO WORLD';
-        cy.get('[data-testid="text-input"]').type(inputText);
+    it('auto-converts while typing after a tool is activated (uppercase)', () => {
+        cy.get('[data-testid="btn-allCapitalizer"]').click();
+
+        cy.get('[data-testid="text-input"]').type('hello');
+        cy.get('[data-testid="text-output"]').should('have.value', 'HELLO');
+
+        cy.get('[data-testid="text-input"]').type(' world');
+        cy.get('[data-testid="text-output"]').should('have.value', 'HELLO WORLD');
+    });
+
+    it('copies converted text to clipboard when "Copiar" is clicked', () => {
+        cy.window().then((win) => {
+            cy.stub(win.navigator.clipboard, 'writeText').as('writeText');
+        });
+
+        cy.get('[data-testid="text-input"]').type('Hello World');
         cy.get('[data-testid="btn-allCapitalizer"]').click();
         cy.get('[data-testid="btn-copy"]').click();
 
-        cy.window().then((win) => {
-            cy.stub(win.navigator.clipboard, 'writeText').callsFake((text) => {
-                expect(text).to.equal(expectedOutput);
-            });
-        });
+        cy.get('@writeText').should('have.been.calledOnceWith', 'HELLO WORLD');
     });
 });
