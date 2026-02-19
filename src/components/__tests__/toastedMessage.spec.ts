@@ -7,7 +7,7 @@ function mountToast(
 ) {
     return mount(ToastedMessage, {
         props: {
-            message: 'Mensagem padrão',
+            message: 'Default message',
             isShow: true,
             ...props
         },
@@ -24,18 +24,18 @@ function mountToast(
 }
 
 describe('ToastedMessage', () => {
-    it('não renderiza quando isShow=false', () => {
+    it('does not render when isShow=false', () => {
         const wrapper = mountToast({ isShow: false });
         expect(wrapper.find('[data-testid="toasted-message"]').exists()).toBe(false);
     });
 
-    it('renderiza quando isShow=true e mostra a mensagem', () => {
-        const wrapper = mountToast({ message: 'Olá toast!' });
+    it('renders when isShow=true and shows the message', () => {
+        const wrapper = mountToast({ message: 'Hello toast!' });
         const el = wrapper.get('[data-testid="toasted-message"]');
-        expect(el.text()).toContain('Olá toast!');
+        expect(el.text()).toContain('Hello toast!');
     });
 
-    it('por padrão (type undefined) usa ícone e classes de success', () => {
+    it('defaults to success styles and icon when type is undefined', () => {
         const wrapper = mountToast({ type: undefined });
 
         const root = wrapper.get('[data-testid="toasted-message"]');
@@ -57,7 +57,7 @@ describe('ToastedMessage', () => {
         expect(fa.attributes('data-icon')).toBe('fa-solid fa-circle-check');
     });
 
-    it('type="error" aplica classes e ícone de erro', () => {
+    it('applies error styles and icon when type="error"', () => {
         const wrapper = mountToast({ type: 'error' });
 
         const root = wrapper.get('[data-testid="toasted-message"]');
@@ -79,7 +79,7 @@ describe('ToastedMessage', () => {
         expect(fa.attributes('data-icon')).toBe('fa-solid fa-circle-exclamation');
     });
 
-    it('type="info" aplica classes e ícone de info', () => {
+    it('applies info styles and icon when type="info"', () => {
         const wrapper = mountToast({ type: 'info' });
 
         const root = wrapper.get('[data-testid="toasted-message"]');
@@ -101,7 +101,7 @@ describe('ToastedMessage', () => {
         expect(fa.attributes('data-icon')).toBe('fa-solid fa-circle-info');
     });
 
-    it('mantém as classes base do container (layout)', () => {
+    it('keeps the base container layout classes', () => {
         const wrapper = mountToast();
         const root = wrapper.get('[data-testid="toasted-message"]');
 
