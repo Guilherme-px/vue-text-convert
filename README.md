@@ -15,14 +15,13 @@ Algumas outras ferramentas foram utilizadas para ajudar a padronizar o código c
 Caso queira rodar na sua maquina basta siga as instruções:
 
  - Faça um clone do repositórios
- - Na raiz do projeto rode o comando `npm install` para instalar as dependência do projeto
- - Após instalar as dependência  use o comando `npm run dev` para iniciar o servidor
+ - Na raiz do projeto rode o comando `bun install` para instalar as dependência do projeto
+ - Após instalar as dependência  use o comando `bun run dev` para iniciar o servidor
 (Todos os comandos estão na parte **script** no arquivo **package.json**)
 
 ### Rodando os testes
 
-Para rodar os testes com o vitest utilize o comando `npm run test:unit` que ele ira rodar os testes unitários.
+Para rodar os testes com o vitest utilize o comando `bun run test:unit` que ele ira rodar os testes unitários.
 
-Para rodar os testes com o cypress use o comando `npm run test:e2e:dev` o cypress irá abrir a interface gráfica dele, basta selecionar o navegador que deseja rodar os testes que ele irá abrir uma aba contendo todos os testes disponíveis, basta clicar em um dos testes que o cypress ira roda-los.
+Para rodar os testes com o cypress use o comando `bun run test:e2e:dev` o cypress irá abrir a interface gráfica dele, basta selecionar o navegador que deseja rodar os testes que ele irá abrir uma aba contendo todos os testes disponíveis, basta clicar em um dos testes que o cypress ira roda-los.
 
- 
