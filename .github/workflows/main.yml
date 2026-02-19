@@ -30,6 +30,7 @@ jobs:
       - name: Cypress E2E
         uses: cypress-io/github-action@v6
         with:
+          install: false
           start: bun run preview
           wait-on: "http://127.0.0.1:4173"
           command: bun run e2e
