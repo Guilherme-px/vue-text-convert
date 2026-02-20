@@ -4,7 +4,7 @@
             v-if="isShow"
             data-testid="toasted-message"
             :class="wrapperClass"
-            class="fixed top-20 right-4 p-4 rounded-xl shadow-lg border flex items-center gap-3 max-w-sm"
+            class="fixed top-20 right-4 p-4 rounded-xl shadow-lg border flex items-center gap-3 max-w-sm z-[9999]"
         >
             <div
                 :class="iconWrapClass"
